@@ -1,4 +1,4 @@
-version: "2.2"
+version: "3"
 
 services:
   api:
@@ -11,8 +11,6 @@ services:
       - 9000:9000
     env_file:
       - api/.env
-    depends_on:
-      - mysql
     volumes:
       - ./api:/go/src/app
     working_dir: /go/src/app
@@ -23,43 +21,6 @@ services:
     networks:
       - go-kit
 
-  mysql:
-    container_name: go-kit-mysql
-    platform: linux/x86_64
-    image: mysql:5.7-debian
-    environment:
-      MYSQL_ROOT_HOST: "%"
-      MYSQL_DATABASE: go_kit
-      MYSQL_ROOT_PASSWORD: password
-    ports:
-      - "3306:3306"
-    networks:
-      - go-kit
-    volumes:
-      - ./mysql/my.cnf:/etc/mysql/conf.d/my.cnf
-
-  dockerize:
-    image: jwilder/dockerize:0.6.1
-    networks:
-      - go-kit
-    command: dockerize
-    profiles:
-      - dev
-
-  migration:
-    container_name: go-kit-migration
-    build:
-      context: migration
-      dockerfile: Dockerfile
-    env_file:
-      - ./migration/.env
-    networks:
-      - we-mental
-    depends_on:
-      - mysql
-    volumes:
-      - ./migration:/migrations
-
 networks:
-  we-mental:
+  go-kit:
     external: true
