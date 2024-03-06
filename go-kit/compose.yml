@@ -1,0 +1,32 @@
+version: "3"
+
+services:
+  api:
+    container_name: go-kit-api
+    build:
+      context: api
+      dockerfile: docker/dev/Dockerfile
+    command: air -c .air.api.toml
+    ports:
+      - 9000:9000
+    env_file:
+      - api/.env
+    volumes:
+      - ./api:/go/src/app
+    working_dir: /go/src/app
+    security_opt:
+      - apparmor:unconfined
+    cap_add:
+      - SYS_PTRACE
+    networks:
+      - go-kit
+
+  gen-pb:
+    container_name: go-kit-gen-pb
+    build:
+      context: gen-pb
+      dockerfile: docker/dev/Dockerfile
+
+networks:
+  go-kit:
+    external: true
