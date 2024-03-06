@@ -14,6 +14,7 @@ import (
 	"github.com/mokoshin0720/microservice-go/go-kit/service"
 	"github.com/mokoshin0720/microservice-go/go-kit/transport"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 )
 
 func main() {
@@ -35,7 +36,7 @@ func main() {
 		errs <- fmt.Errorf("%s", <-c)
 	}()
 
-	grpcListener, err := net.Listen("tcp", ":50051")
+	grpcListener, err := net.Listen("tcp", ":9000")
 	if err != nil {
 		logger.Log("during", "Listen", "err", err)
 		os.Exit(1)
@@ -43,6 +44,7 @@ func main() {
 
 	go func() {
 		baseServer := grpc.NewServer()
+		reflection.Register(baseServer)
 		pb.RegisterMathServiceServer(baseServer, grpcServer)
 		level.Info(logger).Log("msg", "Server started successfully 🚀")
 		baseServer.Serve(grpcListener)
