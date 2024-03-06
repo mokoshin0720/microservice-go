@@ -21,6 +21,12 @@ services:
     networks:
       - go-kit
 
+  gen-pb:
+    container_name: go-kit-gen-pb
+    build:
+      context: gen-pb
+      dockerfile: docker/dev/Dockerfile
+
 networks:
   go-kit:
     external: true
