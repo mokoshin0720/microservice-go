@@ -1,19 +1,19 @@
 version: "3"
 
 services:
-  api:
-    container_name: go-kit-api
+  api-math:
+    container_name: go-kit-api-math
     build:
-      context: api
+      context: api/services/math
       dockerfile: docker/dev/Dockerfile
     command: air -c .air.api.toml
     ports:
       - 9000:9000
     env_file:
-      - api/.env
+      - api/services/math/.env
     volumes:
       - ./api:/go/src/app
-    working_dir: /go/src/app
+    working_dir: /go/src/app/services/math
     security_opt:
       - apparmor:unconfined
     cap_add:
@@ -21,11 +21,25 @@ services:
     networks:
       - go-kit
 
-  gen-pb:
-    container_name: go-kit-gen-pb
+  api-user:
+    container_name: go-kit-api-user
     build:
-      context: gen-pb
+      context: api/user
       dockerfile: docker/dev/Dockerfile
+    command: air -c .air.api.toml
+    ports:
+      - 9001:9001
+    env_file:
+      - api/services/user/.env
+    volumes:
+      - ./api:/go/src/app
+    working_dir: /go/src/app/services/user
+    security_opt:
+      - apparmor:unconfined
+    cap_add:
+      - SYS_PTRACE
+    networks:
+      - go-kit
 
 networks:
   go-kit:

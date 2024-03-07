@@ -16,9 +16,13 @@ copy-env: ## 各ディレクトリの.envをコピー
 .PHONY: run
 run: init server ## migrationとseedを実行してサーバーを起動
 
-.PHONY: server
-server: init ## サーバーを起動
-	docker-compose up api
+.PHONY: math-server
+math-server: init ## サーバーを起動
+	docker-compose up api-math
+
+.PHONY: user-server
+user-server: init ## サーバーを起動
+	docker-compose up api-user
 
 .PHONY: down
 down: ## コンテナを削除
