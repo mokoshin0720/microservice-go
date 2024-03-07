@@ -4,23 +4,23 @@ services:
   api-math:
     container_name: go-kit-api-math
     build:
-      context: api/math
+      context: api/services/math
       dockerfile: docker/dev/Dockerfile
     command: air -c .air.api.toml
     ports:
       - 9000:9000
     env_file:
-      - api/math/.env
+      - api/services/math/.env
     volumes:
-      - ./api/math:/go/src/app
-    working_dir: /go/src/app
+      - ./api:/go/src/app
+    working_dir: /go/src/app/services/math
     security_opt:
       - apparmor:unconfined
     cap_add:
       - SYS_PTRACE
     networks:
       - go-kit
-  
+
   api-user:
     container_name: go-kit-api-user
     build:
@@ -30,10 +30,10 @@ services:
     ports:
       - 9001:9001
     env_file:
-      - api/user/.env
+      - api/services/user/.env
     volumes:
-      - ./api/user:/go/src/app
-    working_dir: /go/src/app
+      - ./api:/go/src/app
+    working_dir: /go/src/app/services/user
     security_opt:
       - apparmor:unconfined
     cap_add:

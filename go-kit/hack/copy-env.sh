@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 
-cp ./api/math/.env.default ./api/math/.env
-cp ./api/user/.env.default ./api/user/.env
+cp ./api/services/math/.env.default ./api/services/math/.env
+cp ./api/services/user/.env.default ./api/services/user/.env
