@@ -18,7 +18,7 @@ run: init server ## migrationとseedを実行してサーバーを起動
 
 .PHONY: server
 server: init ## サーバーを起動
-	docker-compose up api
+	docker-compose up api-math
 
 .PHONY: down
 down: ## コンテナを削除

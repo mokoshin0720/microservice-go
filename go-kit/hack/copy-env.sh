@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-cp ./api/.env.default ./api/.env
+cp ./api/math/.env.default ./api/math/.env
