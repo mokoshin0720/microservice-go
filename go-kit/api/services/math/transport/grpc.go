@@ -12,7 +12,8 @@ import (
 
 // NewGRPCServer initializes a new gRPC server
 type gRPCServer struct {
-	add gt.Handler
+	add      gt.Handler
+	subtract gt.Handler
 	pb.UnimplementedMathServiceServer
 }
 
@@ -38,11 +39,39 @@ func NewGRPCServer(endpoints endpoints.Endpoints, logger log.Logger) *gRPCServer
 				helper.DisplayServerResponseTrailers,
 			),
 		),
+		subtract: gt.NewServer(
+			endpoints.Subtract,
+			decodeMathRequest,
+			encodeMathResponse,
+			gt.ServerBefore(
+				helper.ExtractCorrelationID,
+			),
+			gt.ServerBefore(
+				helper.DisplayServerRequestHeaders,
+			),
+			gt.ServerAfter(
+				helper.InjectResponseHeader,
+				helper.InjectResponseTrailer,
+				helper.InjectConsumedCorrelationID,
+			),
+			gt.ServerAfter(
+				helper.DisplayServerResponseHeaders,
+				helper.DisplayServerResponseTrailers,
+			),
+		),
 	}
 }
 
 func (s *gRPCServer) Add(ctx context.Context, req *pb.MathRequest) (*pb.MathResponse, error) {
 	_, resp, err := s.add.ServeGRPC(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+	return resp.(*pb.MathResponse), nil
+}
+
+func (s *gRPCServer) Subtract(ctx context.Context, req *pb.MathRequest) (*pb.MathResponse, error) {
+	_, resp, err := s.subtract.ServeGRPC(ctx, req)
 	if err != nil {
 		return nil, err
 	}

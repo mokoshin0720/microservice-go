@@ -4,6 +4,7 @@ option go_package = "github.com/mokoshin0720/microservice-go/go-kit/pb";
 
 service MathService {
   rpc Add(MathRequest) returns (MathResponse) {}
+  rpc Subtract(MathRequest) returns (MathResponse) {}
 }
 
 message MathRequest {
