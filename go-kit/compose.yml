@@ -20,6 +20,26 @@ services:
       - SYS_PTRACE
     networks:
       - go-kit
+  
+  api-user:
+    container_name: go-kit-api-user
+    build:
+      context: api/user
+      dockerfile: docker/dev/Dockerfile
+    command: air -c .air.api.toml
+    ports:
+      - 9001:9001
+    env_file:
+      - api/user/.env
+    volumes:
+      - ./api/user:/go/src/app
+    working_dir: /go/src/app
+    security_opt:
+      - apparmor:unconfined
+    cap_add:
+      - SYS_PTRACE
+    networks:
+      - go-kit
 
 networks:
   go-kit:
