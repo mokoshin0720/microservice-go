@@ -15,12 +15,27 @@ type gRPCServer struct {
 	pb.UnimplementedMathServiceServer
 }
 
-func NewGRPCServer(endpoints endpoints.Endpoints, logger log.Logger) pb.MathServiceServer {
+func NewGRPCServer(endpoints endpoints.Endpoints, logger log.Logger) *gRPCServer {
 	return &gRPCServer{
 		add: gt.NewServer(
 			endpoints.Add,
 			decodeMathRequest,
 			encodeMathResponse,
+			gt.ServerBefore(
+				extractCorrelationID,
+			),
+			gt.ServerBefore(
+				displayServerRequestHeaders,
+			),
+			gt.ServerAfter(
+				injectResponseHeader,
+				injectResponseTrailer,
+				injectConsumedCorrelationID,
+			),
+			gt.ServerAfter(
+				displayServerResponseHeaders,
+				displayServerResponseTrailers,
+			),
 		),
 	}
 }
